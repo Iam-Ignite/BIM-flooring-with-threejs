@@ -260,7 +260,7 @@ const getPredictiveInsights = (selectedFloor) => {
 };
 
 const Room = ({ home }) => {
-  const [userTexture, setUserTexture] = useState("/public/wood-parquet.jpeg");
+  const [userTexture, setUserTexture] = useState("/wood-parquet.jpeg");
   const [wallColor, setWallColor] = useState("#EAE7DC"); // Default wall color
   const [showFloorOptions, setShowFloorOptions] = useState(false);
   const [selectedFloor, setSelectedFloor] = useState(null);

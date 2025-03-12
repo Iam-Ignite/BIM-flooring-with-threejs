@@ -17,7 +17,7 @@ export const floorOptionsData = [
       "installationComplexity": "Moderate",
       "installationScore": 5.5,
       "installationCost": 25, // Estimated based on complexity
-      "texture": "/public/2145.jpg",
+      "texture": "/2145.jpg",
       "environmentalImpact": "Medium",
       "totalLifecycleCost": 65, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (16kg CO2/sq.ft)",
@@ -47,7 +47,7 @@ export const floorOptionsData = [
       "installationComplexity": "Moderate to High",
       "installationScore": 6.5,
       "installationCost": 30, // Estimated based on complexity
-      "texture": "/public/bernard-hermant-cB18uhhf43s-unsplash.jpg",
+      "texture": "/bernard-hermant-cB18uhhf43s-unsplash.jpg",
       "environmentalImpact": "Medium-Low",
       "totalLifecycleCost": 65, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium-Low (12kg CO2/sq.ft)",
@@ -77,7 +77,7 @@ export const floorOptionsData = [
       "installationComplexity": "High",
       "installationScore": 7.0,
       "installationCost": 35, // Estimated based on complexity
-      "texture": "/public/black-white-floor.avif",
+      "texture": "/black-white-floor.avif",
       "environmentalImpact": "Medium",
       "totalLifecycleCost": 80, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (15kg CO2/sq.ft)",
@@ -107,7 +107,7 @@ export const floorOptionsData = [
       "installationComplexity": "Very High",
       "installationScore": 8.5,
       "installationCost": 50, // Estimated based on complexity
-      "texture": "/public/brick-floor.jpg",
+      "texture": "/brick-floor.jpg",
       "environmentalImpact": "Low (Reclaimed) to High (New)",
       "totalLifecycleCost": 105, // Estimated: price + installation + maintenance over time
       "co2Footprint": "High initially, Low over lifetime (18kg CO2/sq.ft)",
@@ -137,7 +137,7 @@ export const floorOptionsData = [
       "installationComplexity": "Low",
       "installationScore": 3.0,
       "installationCost": 15, // Estimated based on complexity
-      "texture": "/public/clean-white-wall_1194-5925.avif",
+      "texture": "/clean-white-wall_1194-5925.avif",
       "environmentalImpact": "Medium-High",
       "totalLifecycleCost": 45, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium-High (17kg CO2/sq.ft)",
@@ -167,7 +167,7 @@ export const floorOptionsData = [
       "installationComplexity": "Very High",
       "installationScore": 8.7,
       "installationCost": 45, // Estimated based on complexity
-      "texture": "/public/geometric-pattern-floor.avif",
+      "texture": "/geometric-pattern-floor.avif",
       "environmentalImpact": "Medium",
       "totalLifecycleCost": 100, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (15kg CO2/sq.ft)",
@@ -197,7 +197,7 @@ export const floorOptionsData = [
       "installationComplexity": "High",
       "installationScore": 7.5,
       "installationCost": 35, // Estimated based on complexity
-      "texture": "/public/gray-parquet.jpg",
+      "texture": "/gray-parquet.jpg",
       "environmentalImpact": "Medium",
       "totalLifecycleCost": 85, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (14kg CO2/sq.ft)",
@@ -227,7 +227,7 @@ export const floorOptionsData = [
       "installationComplexity": "High",
       "installationScore": 7.0,
       "installationCost": 40, // Estimated based on complexity
-      "texture": "/public/joshua-bartell-6vvIBTvL90A-unsplash.jpg",
+      "texture": "/joshua-bartell-6vvIBTvL90A-unsplash.jpg",
       "environmentalImpact": "Medium-High",
       "totalLifecycleCost": 110, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium-High (19kg CO2/sq.ft)",
@@ -257,7 +257,7 @@ export const floorOptionsData = [
       "installationComplexity": "Moderate",
       "installationScore": 6.0,
       "installationCost": 30, // Estimated based on complexity
-      "texture": "/public/lamp-floor.avif",
+      "texture": "/lamp-floor.avif",
       "environmentalImpact": "Medium",
       "totalLifecycleCost": 70, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (15kg CO2/sq.ft)",
@@ -287,7 +287,7 @@ export const floorOptionsData = [
       "installationComplexity": "Very High",
       "installationScore": 8.8,
       "installationCost": 55, // Estimated based on complexity
-      "texture": "/public/marble-floor.jpg",
+      "texture": "/marble-floor.jpg",
       "environmentalImpact": "High",
       "totalLifecycleCost": 145, // Estimated: price + installation + maintenance over time
       "co2Footprint": "High (25kg CO2/sq.ft)",
@@ -317,7 +317,7 @@ export const floorOptionsData = [
       "installationComplexity": "High",
       "installationScore": 7.3,
       "installationCost": 40, // Estimated based on complexity
-      "texture": "/public/parquet-floor-texture_1194-6957.avif",
+      "texture": "/parquet-floor-texture_1194-6957.avif",
       "environmentalImpact": "Medium-High",
       "totalLifecycleCost": 100, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (16kg CO2/sq.ft)",
@@ -347,7 +347,7 @@ export const floorOptionsData = [
       "installationComplexity": "High",
       "installationScore": 7.5,
       "installationCost": 45, // Estimated based on complexity
-      "texture": "/public/red-parquet-floor_1194-6946.avif",
+      "texture": "/red-parquet-floor_1194-6946.avif",
       "environmentalImpact": "Medium-High",
       "totalLifecycleCost": 110, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium-High (18kg CO2/sq.ft)",
@@ -377,7 +377,7 @@ export const floorOptionsData = [
       "installationComplexity": "Moderate to High",
       "installationScore": 6.5,
       "installationCost": 35, // Estimated based on complexity
-      "texture": "/public/tile-floor.jpg",
+      "texture": "/tile-floor.jpg",
       "environmentalImpact": "Medium",
       "totalLifecycleCost": 80, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (14kg CO2/sq.ft)",
@@ -407,7 +407,7 @@ export const floorOptionsData = [
       "installationComplexity": "High",
       "installationScore": 7.8,
       "installationCost": 45, // Estimated based on complexity
-      "texture": "/public/tile-motif.avif",
+      "texture": "/tile-motif.avif",
       "environmentalImpact": "Medium",
       "totalLifecycleCost": 105, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (16kg CO2/sq.ft)",
@@ -437,7 +437,7 @@ export const floorOptionsData = [
       "installationComplexity": "Moderate",
       "installationScore": 6.0,
       "installationCost": 30, // Estimated based on complexity
-      "texture": "/public/tiles-floor-1.jpg",
+      "texture": "/tiles-floor-1.jpg",
       "environmentalImpact": "Medium",
       "totalLifecycleCost": 75, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (14kg CO2/sq.ft)",
@@ -467,7 +467,7 @@ export const floorOptionsData = [
       "installationComplexity": "High",
       "installationScore": 7.2,
       "installationCost": 45, // Estimated based on complexity
-      "texture": "/public/wesley-tingey-RZgumehZWs4-unsplash.jpg",
+      "texture": "/wesley-tingey-RZgumehZWs4-unsplash.jpg",
       "environmentalImpact": "Medium-High",
       "totalLifecycleCost": 120, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium-High (19kg CO2/sq.ft)",
@@ -497,7 +497,7 @@ export const floorOptionsData = [
       "installationComplexity": "Moderate",
       "installationScore": 5.5,
       "installationCost": 25, // Estimated based on complexity
-      "texture": "/public/white-wooden-floor.jpg",
+      "texture": "/white-wooden-floor.jpg",
       "environmentalImpact": "Medium",
       "totalLifecycleCost": 70, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium (15kg CO2/sq.ft)",
@@ -527,7 +527,7 @@ export const floorOptionsData = [
       "installationComplexity": "Moderate to High",
       "installationScore": 6.8,
       "installationCost": 35, // Estimated based on complexity
-      "texture": "/public/wood-floor-1.jpg",
+      "texture": "/wood-floor-1.jpg",
       "environmentalImpact": "Medium-High",
       "totalLifecycleCost": 95, // Estimated: price + installation + maintenance over time
       "co2Footprint": "Medium-High (18kg CO2/sq.ft)",
