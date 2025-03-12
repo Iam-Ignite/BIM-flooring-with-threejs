@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -16,6 +16,12 @@ import Armchair from "./Armchair";
 import Couch from "./Couch";
 import Rug from "./Rug";
 import Floor from "./Floor";
+import { floorOptionsData } from "./floorOptionsData";
+import FloorOptions from "./FloorOptions";
+import FloorDetails from "./FloorDetails";
+import AIRecommendations from "./AIRecommendations";
+import ComparisonFloor from "./ComparisonFloor";
+import AiFloorSelector from "./AiFloorSelector";
 
 // Set up the scene
 const Scene = ({ userTexture, wallColor }) => {
@@ -25,7 +31,6 @@ const Scene = ({ userTexture, wallColor }) => {
   return (
     <>
       {/* Enhanced lighting setup for the larger space */}
-
       <ambientLight intensity={0.5} />
 
       {/* Central ceiling light */}
@@ -79,7 +84,6 @@ const Scene = ({ userTexture, wallColor }) => {
       </mesh>
 
       {/* Large Floor */}
-
       <Floor size={[14, 12]} userTexture={userTexture} />
 
       {/* Oversized Area Rug */}
@@ -105,8 +109,6 @@ const Scene = ({ userTexture, wallColor }) => {
       <WallSconce position={[4, 2.4, -5.9]} rotation={[0, 0, 0]} />
       <WallSconce position={[-4, 2.4, 5.9]} rotation={[0, Math.PI, 0]} />
       <WallSconce position={[4, 2.4, 5.9]} rotation={[0, Math.PI, 0]} />
-      {/* Dining Area - positioned on the other side of the room */}
-      {/* <DiningSet position={[4, 0.5, 1.5]} /> */}
 
       {/* Grand Chandelier - centered in the expanded room */}
       <Chandelier position={[0, 4.2, 0]} scale={1.5} />
@@ -168,176 +170,117 @@ const Scene = ({ userTexture, wallColor }) => {
   );
 };
 
+// AI Recommendation functions
+const getRecommendations = (preferences) => {
+  const { budget, durability, sustainability, maintenance, moisture, room } =
+    preferences;
+
+  // Convert preferences to numerical weights
+  const budgetWeight = budget === "high" ? 3 : budget === "medium" ? 2 : 1;
+  const durabilityWeight =
+    durability === "high" ? 3 : durability === "medium" ? 2 : 1;
+  const sustainabilityWeight =
+    sustainability === "high" ? 3 : sustainability === "medium" ? 2 : 1;
+  const maintenanceWeight =
+    maintenance === "high" ? 1 : maintenance === "medium" ? 2 : 3; // Inverse (low maintenance is preferred)
+  const moistureWeight =
+    moisture === "high" ? 3 : moisture === "medium" ? 2 : 1;
+
+  // Calculate scores for each flooring option
+  const scoredOptions = floorOptionsData.map((floor) => {
+    // Score factors
+    let budgetScore = 10 - Math.min(floor.price / 15, 10); // Lower price = higher score
+    let durabilityScore = floor.durability;
+    let sustainabilityScore = floor.sustainabilityScore;
+    let maintenanceScore = floor.maintenance.includes("Low")
+      ? 9
+      : floor.maintenance.includes("Moderate")
+      ? 6
+      : 3;
+    let moistureScore = floor.moistureResistance.includes("High")
+      ? 9
+      : floor.moistureResistance.includes("Moderate")
+      ? 6
+      : 3;
+
+    // Room suitability bonus
+    let roomSuitabilityBonus = floor.roomSuitability.includes(room) ? 2 : 0;
+
+    // Weighted total score
+    let totalScore =
+      (budgetScore * budgetWeight +
+        durabilityScore * durabilityWeight +
+        sustainabilityScore * sustainabilityWeight +
+        maintenanceScore * maintenanceWeight +
+        moistureScore * moistureWeight +
+        roomSuitabilityBonus) /
+      (budgetWeight +
+        durabilityWeight +
+        sustainabilityWeight +
+        maintenanceWeight +
+        moistureWeight +
+        1);
+
+    return {
+      ...floor,
+      score: totalScore.toFixed(1),
+      matchPercentage: Math.min(Math.round((totalScore / 10) * 100), 98), // Cap at 98% for realism
+    };
+  });
+
+  // Sort by score (highest first)
+  return scoredOptions.sort((a, b) => b.score - a.score);
+};
+
+// Mock predictive analytics function
+const getPredictiveInsights = (selectedFloor) => {
+  if (!selectedFloor) return null;
+
+  return {
+    predictedLifespan: Math.round(selectedFloor.durability * 3.5), // Estimated years
+    maintenanceCosts: Math.round(selectedFloor.price * 0.5), // Lifetime maintenance cost per m²
+    resaleImpact:
+      selectedFloor.durability > 8.5
+        ? "High Positive"
+        : selectedFloor.durability > 7
+        ? "Moderate Positive"
+        : "Neutral",
+    trendForecast:
+      selectedFloor.sustainabilityScore > 7
+        ? "Increasing in popularity"
+        : "Stable market demand",
+    installationTimeEstimate: selectedFloor.installationComplexity.includes(
+      "High"
+    )
+      ? "3-5 days"
+      : selectedFloor.installationComplexity.includes("Moderate")
+      ? "2-3 days"
+      : "1-2 days",
+  };
+};
+
 const Room = ({ home }) => {
-  const [userTexture, setUserTexture] = useState(
-    "../../public/wood-parquet.jpeg"
-  );
+  const [userTexture, setUserTexture] = useState("/public/wood-parquet.jpeg");
   const [wallColor, setWallColor] = useState("#EAE7DC"); // Default wall color
   const [showFloorOptions, setShowFloorOptions] = useState(false);
-
-  // Floor options data
- const floorOptions = [
-    {
-        "id": 1,
-        "name": "2145 Floor",
-        "description": "Light oak wooden flooring with a sleek finish",
-        "durability": "High (25+ years)",
-        "price": "$30/sq.ft",
-        "texture": "../../public/2145.jpg"
-    },
-    {
-        "id": 2,
-        "name": "Bernard Hermant Floor",
-        "description": "Classic checkered tile flooring",
-        "durability": "Medium (20+ years)",
-        "price": "$28/sq.ft",
-        "texture": "../../public/bernard-hermant-cB18uhhf43s-unsplash.jpg"
-    },
-    {
-        "id": 3,
-        "name": "Black White Floor",
-        "description": "Modern black and white checkered floor tiles",
-        "durability": "High (30+ years)",
-        "price": "$40/sq.ft",
-        "texture": "../../public/black-white-floor.avif"
-    },
-    {
-        "id": 4,
-        "name": "Brick Floor",
-        "description": "Rustic brick flooring for a vintage aesthetic",
-        "durability": "Very High (50+ years)",
-        "price": "$45/sq.ft",
-        "texture": "../../public/brick-floor.jpg"
-    },
-    {
-        "id": 5,
-        "name": "Clean White Wall",
-        "description": "Smooth white flooring for a minimalistic look",
-        "durability": "Medium (15+ years)",
-        "price": "$25/sq.ft",
-        "texture": "../../public/clean-white-wall_1194-5925.avif"
-    },
-    {
-        "id": 6,
-        "name": "Geometric Pattern Floor",
-        "description": "Hexagonal geometric patterned tiles",
-        "durability": "High (30+ years)",
-        "price": "$50/sq.ft",
-        "texture": "../../public/geometric-pattern-floor.avif"
-    },
-    {
-        "id": 7,
-        "name": "Gray Parquet",
-        "description": "Elegant grey parquet flooring",
-        "durability": "High (30+ years)",
-        "price": "$38/sq.ft",
-        "texture": "../../public/gray-parquet.jpg"
-    },
-    {
-        "id": 8,
-        "name": "Joshua Bartell Floor",
-        "description": "Sophisticated wooden flooring for premium interiors",
-        "durability": "Very High (40+ years)",
-        "price": "$55/sq.ft",
-        "texture": "../../public/joshua-bartell-6vvIBTvL90A-unsplash.jpg"
-    },
-    {
-        "id": 9,
-        "name": "Lamp Floor",
-        "description": "Subtle lighting-reflective floor tiles",
-        "durability": "Medium (20+ years)",
-        "price": "$35/sq.ft",
-        "texture": "../../public/lamp-floor.avif"
-    },
-    {
-        "id": 10,
-        "name": "Marble Floor",
-        "description": "Premium white marble flooring",
-        "durability": "Very High (50+ years)",
-        "price": "$75/sq.ft",
-        "texture": "../../public/marble-floor.jpg"
-    },
-    {
-        "id": 11,
-        "name": "Parquet Floor Texture",
-        "description": "Natural wooden parquet for an elegant touch",
-        "durability": "High (30+ years)",
-        "price": "$45/sq.ft",
-        "texture": "../../public/parquet-floor-texture_1194-6957.avif"
-    },
-    {
-        "id": 12,
-        "name": "Red Parquet Floor",
-        "description": "Bold red wooden parquet flooring",
-        "durability": "High (35+ years)",
-        "price": "$50/sq.ft",
-        "texture": "../../public/red-parquet-floor_1194-6946.avif"
-    },
-    {
-        "id": 13,
-        "name": "Tile Floor",
-        "description": "Classic patterned tile flooring",
-        "durability": "High (30+ years)",
-        "price": "$40/sq.ft",
-        "texture": "../../public/tile-floor.jpg"
-    },
-    {
-        "id": 14,
-        "name": "Tile Motif",
-        "description": "Decorative tile flooring with intricate patterns",
-        "durability": "High (30+ years)",
-        "price": "$55/sq.ft",
-        "texture": "../../public/tile-motif.avif"
-    },
-    {
-        "id": 15,
-        "name": "Tiles Floor",
-        "description": "Sleek modern tiles for contemporary homes",
-        "durability": "High (30+ years)",
-        "price": "$42/sq.ft",
-        "texture": "../../public/tiles-floor-1.jpg"
-    },
-    {
-        "id": 16,
-        "name": "Wesley Tingey Floor",
-        "description": "High-end wooden flooring with rich textures",
-        "durability": "Very High (40+ years)",
-        "price": "$60/sq.ft",
-        "texture": "../../public/wesley-tingey-RZgumehZWs4-unsplash.jpg"
-    },
-    {
-        "id": 17,
-        "name": "White Wooden Floor",
-        "description": "Bright and clean white wooden flooring",
-        "durability": "High (30+ years)",
-        "price": "$38/sq.ft",
-        "texture": "../../public/white-wooden-floor.jpg"
-    },
-    {
-        "id": 18,
-        "name": "Wood Floor",
-        "description": "Rustic dark wood flooring",
-        "durability": "High (35+ years)",
-        "price": "$48/sq.ft",
-        "texture": "../../public/wood-floor-1.jpg"
-    },
-    {
-        "id": 19,
-        "name": "Wooden Floor",
-        "description": "Timeless wooden flooring with natural textures",
-        "durability": "Very High (40+ years)",
-        "price": "$52/sq.ft",
-        "texture": "../../public/wooden-floor-2.jpg"
-    },
-    {
-        "id": 20,
-        "name": "Wooden Parquet Floor",
-        "description": "Classic parquet flooring with intricate designs",
-        "durability": "Very High (45+ years)",
-        "price": "$58/sq.ft",
-        "texture": "../../public/wooden-parquet-floor.jpg"
-    }
-]
+  const [selectedFloor, setSelectedFloor] = useState(null);
+  const [roomType, setRoomType] = useState("Living Room");
+  const [userPreferences, setUserPreferences] = useState({
+    budget: "medium",
+    durability: "high",
+    sustainability: "medium",
+    maintenance: "low",
+    moisture: "medium",
+    room: "Living Room",
+  });
+  const [showAIRecommendations, setShowAIRecommendations] = useState(false);
+  const [recommendedFloors, setRecommendedFloors] = useState([]);
+  const [showSelectedFloorDetails, setShowSelectedFloorDetails] =
+    useState(false);
+  const [predictiveInsights, setPredictiveInsights] = useState(null);
+  const [floorArea, setFloorArea] = useState(25); // Default floor area in m²
+  const [showSideBySide, setShowSideBySide] = useState(false);
+  const [comparisonFloor, setComparisonFloor] = useState(null);
 
   // Handle texture upload
   const handleTextureUpload = (event) => {
@@ -354,14 +297,84 @@ const Room = ({ home }) => {
   };
 
   // Handle selecting a floor option
-  const selectFloor = (texture) => {
-    setUserTexture(texture);
+  const selectFloor = (floor) => {
+    if (typeof floor === "string") {
+      // Handle legacy case where only texture string is passed
+      setUserTexture(floor);
+    } else {
+      // New case handling full floor object
+      setUserTexture(floor.texture);
+      setSelectedFloor(floor);
+      setShowSelectedFloorDetails(true);
+      setPredictiveInsights(getPredictiveInsights(floor));
+    }
     setShowFloorOptions(false);
+  };
+
+  // Generate AI recommendations based on user preferences
+  const generateRecommendations = () => {
+    const recommendations = getRecommendations(userPreferences);
+    setRecommendedFloors(recommendations);
+    setShowAIRecommendations(true);
+    setShowFloorOptions(false);
+  };
+
+  // Handle user preference changes
+  const handlePreferenceChange = (preference, value) => {
+    setUserPreferences((prev) => ({
+      ...prev,
+      [preference]: value,
+    }));
+  };
+
+  // Handle room type change
+  const handleRoomTypeChange = (event) => {
+    const newRoomType = event.target.value;
+    setRoomType(newRoomType);
+    setUserPreferences((prev) => ({
+      ...prev,
+      room: newRoomType,
+    }));
+  };
+
+  // Handle floor area change
+  const handleFloorAreaChange = (event) => {
+    setFloorArea(Number(event.target.value));
   };
 
   // Toggle floor options panel
   const toggleFloorOptions = () => {
     setShowFloorOptions(!showFloorOptions);
+    setShowAIRecommendations(false);
+    setShowSelectedFloorDetails(false);
+  };
+
+  // Toggle AI recommendations panel
+  const toggleAIRecommendations = () => {
+    setShowAIRecommendations(!showAIRecommendations);
+    setShowFloorOptions(false);
+    setShowSelectedFloorDetails(false);
+  };
+
+  // Set up comparison view
+  const setupComparison = (floor) => {
+    setComparisonFloor(floor);
+    setShowSideBySide(true);
+  };
+
+  // Calculate total cost estimates
+  const calculateTotalCost = (floor) => {
+    if (!floor) return { materials: 0, installation: 0, total: 0 };
+
+    const materialsCost = floor.price * floorArea;
+    const installationCost = floor.installationCost * floorArea;
+    const totalCost = materialsCost + installationCost;
+
+    return {
+      materials: materialsCost.toFixed(2),
+      installation: installationCost.toFixed(2),
+      total: totalCost.toFixed(2),
+    };
   };
 
   return (
@@ -374,125 +387,65 @@ const Room = ({ home }) => {
       }}
     >
       {!home && (
-        <div
-          style={{
-            position: "absolute",
-            top: 10,
-            left: 10,
-            zIndex: 10,
-            background: "#fff",
-            padding: "10px",
-            borderRadius: "5px",
-            boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
-            maxWidth: "300px",
-          }}
-        >
-          <div style={{ marginBottom: "10px" }}>
-            <label
-              htmlFor="texture-upload"
-              style={{ display: "block", marginBottom: "5px" }}
-            >
-              Upload Custom Floors
-            </label>
-            <input
-              id="texture-upload"
-              type="file"
-              accept="image/*"
-              onChange={handleTextureUpload}
-            />
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-            <button
-              onClick={toggleFloorOptions}
-              style={{
-                padding: "8px 12px",
-                background: "#4285F4",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                width: "100%",
-              }}
-            >
-              {showFloorOptions
-                ? "Hide Floor Options"
-                : "Choose From Floor Options"}
-            </button>
-          </div>
-
-          {showFloorOptions && (
-            <div
-              style={{
-                marginTop: "10px",
-                maxHeight: "300px",
-                overflowY: "auto",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
-              }}
-            >
-              {floorOptions.map((floor) => (
-                <div
-                  key={floor.id}
-                  style={{
-                    padding: "10px",
-                    borderBottom: "1px solid #eee",
-                    cursor: "pointer",
-                    transition: "background-color 0.2s",
-                    backgroundColor:
-                      userTexture === floor.texture ? "#f0f8ff" : "white",
-                  }}
-                  onClick={() => selectFloor(floor.texture)}
-                >
-                  <div style={{ fontWeight: "bold" }}>{floor.name}</div>
-                  <div style={{ fontSize: "0.9em", color: "#555" }}>
-                    {floor.description}
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginTop: "5px",
-                    }}
-                  >
-                    <span style={{ color: "#178217" }}>
-                      Durability: {floor.durability}
-                    </span>
-                    <span style={{ fontWeight: "bold" }}>{floor.price}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div style={{ marginTop: "10px" }}>
-            <label
-              htmlFor="wall-color"
-              style={{ display: "block", marginBottom: "5px" }}
-            >
-              Wall Color:
-            </label>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <input
-                id="wall-color"
-                type="color"
-                value={wallColor}
-                onChange={handleWallColorChange}
-                style={{ marginRight: "10px" }}
-              />
-              <span>{wallColor}</span>
-            </div>
-          </div>
-        </div>
+        <AiFloorSelector
+          roomType={roomType}
+          handleRoomTypeChange={handleRoomTypeChange}
+          floorArea={floorArea}
+          handleFloorAreaChange={handleFloorAreaChange}
+          handlePreferenceChange={handlePreferenceChange}
+          handleTextureUpload={handleTextureUpload}
+          generateRecommendations={generateRecommendations}
+          userPreferences={userPreferences}
+          toggleFloorOptions={toggleFloorOptions}
+          wallColor={wallColor}
+          handleWallColorChange={handleWallColorChange}
+        />
       )}
 
-      <Canvas
-        shadows
-        camera={{ position: [0, 3, 8], fov: 60 }}
-        style={{ width: "100%", height: "100%" }}
-        gl={{ antialias: true, alpha: false }}
-        linear
-      >
+      {/* Floor Options Panel */}
+      {showFloorOptions && (
+        <FloorOptions
+          setShowFloorOptions={setShowFloorOptions}
+          floorOptionsData={floorOptionsData}
+          selectFloor={selectFloor}
+          setupComparison={setupComparison}
+        />
+      )}
+
+      {/* AI Recommendations Panel */}
+      {showAIRecommendations && (
+        <AIRecommendations
+          setShowAIRecommendations={setShowAIRecommendations}
+          roomType={roomType}
+          userPreferences={userPreferences}
+          recommendedFloors={recommendedFloors}
+          setupComparison={setupComparison}
+        />
+      )}
+
+      {/* Selected Floor Details Panel */}
+      {showSelectedFloorDetails && selectedFloor && (
+        <FloorDetails
+          selectedFloor={selectedFloor}
+          setShowSelectedFloorDetails={setShowSelectedFloorDetails}
+          calculateTotalCost={calculateTotalCost}
+          predictiveInsights={predictiveInsights}
+          floorArea={floorArea}
+        />
+      )}
+
+      {/* Side-by-Side Comparison Panel */}
+      {showSideBySide && selectedFloor && comparisonFloor && (
+        <ComparisonFloor
+          setShowSideBySide={setShowSideBySide}
+          selectedFloor={selectedFloor}
+          comparisonFloor={comparisonFloor}
+          selectFloor={selectFloor}
+          calculateTotalCost={calculateTotalCost}
+        />
+      )}
+
+      <Canvas shadows camera={{ position: [0, 3, 8], fov: 60 }}>
         <Scene userTexture={userTexture} wallColor={wallColor} />
       </Canvas>
     </div>
