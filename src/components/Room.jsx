@@ -420,6 +420,8 @@ const Room = ({ home }) => {
           userPreferences={userPreferences}
           recommendedFloors={recommendedFloors}
           setupComparison={setupComparison}
+          selectFloor={selectFloor}
+          toggleAIRecommendations={toggleAIRecommendations}
         />
       )}
 
@@ -442,6 +444,7 @@ const Room = ({ home }) => {
           comparisonFloor={comparisonFloor}
           selectFloor={selectFloor}
           calculateTotalCost={calculateTotalCost}
+          floorArea={floorArea}
         />
       )}
 

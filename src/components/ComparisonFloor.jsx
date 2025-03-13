@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ComparisonFloor({setShowSideBySide,selectedFloor,comparisonFloor,selectFloor,calculateTotalCost}) {
+export default function ComparisonFloor({setShowSideBySide,selectedFloor,comparisonFloor,selectFloor,calculateTotalCost,floorArea}) {
   return (
     <div
       style={{

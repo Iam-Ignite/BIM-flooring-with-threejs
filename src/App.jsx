@@ -1,18 +1,15 @@
-import { useState } from "react";
-import "./App.css";
-import Room from "./components/Room";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./page/Home";
-import { Route, Routes } from "react-router";
+import Room from "./components/Room";
 
 function App() {
   return (
-    <>
-
+    <Router>
       <Routes>
-        <Route path="/" element={<Room />} />
-        <Route path="/home" element={<Room />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/room" element={<Room />} />
       </Routes>
-    </>
+    </Router>
   );
 }
 

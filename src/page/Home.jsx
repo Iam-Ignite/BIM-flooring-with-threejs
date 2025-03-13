@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Room from "../components/Room";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);

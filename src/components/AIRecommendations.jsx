@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function AIRecommendations({setShowAIRecommendations,roomType,userPreferences,recommendedFloors,setupComparison}) {
+export default function AIRecommendations({setShowAIRecommendations,roomType,userPreferences,recommendedFloors,setupComparison,selectFloor}) {
   return (
     <div
       style={{
